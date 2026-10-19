@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Pádel Arena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=50">
+</head>
+<body>
+<div id="game"></div>
+
+<!-- ===== HUD ===== -->
+<div id="scoreboard">
+  <div class="sb-head" id="sbHead">PÁDEL ARENA · EXHIBICIÓN</div>
+  <div class="sb-row" id="row0"><div class="sb-srv"><i></i></div><div class="sb-name" id="name0"></div><div class="sb-sets" id="sets0"></div><div class="sb-pts" id="pts0">0</div></div>
+  <div class="sb-row" id="row1"><div class="sb-srv"><i></i></div><div class="sb-name" id="name1"></div><div class="sb-sets" id="sets1"></div><div class="sb-pts" id="pts1">0</div></div>
+</div>
+<div id="trainHud" class="hidden"></div>
+<div id="topRight"><button class="ibtn" id="bCam">CÁMARA (C)</button><button class="ibtn" id="bMute">SONIDO (M)</button><button class="ibtn" id="bPause">PAUSA (P)</button></div>
+<div id="hint"></div>
+<div id="msg"><div class="t"></div><div class="s"></div></div>
+<div id="tip"></div>
+<div id="call"></div>
+<div id="mate"></div>
+<div id="energy"></div>
+<div id="replayBadge" class="hidden"><b>● REPETICIÓN</b><span>ESPACIO para saltar</span></div>
+<div id="intro" class="hidden"></div>
+<div id="tvSpeed"></div>
+<div id="tvLower"></div>
+
+<div id="touch">
+  <div id="joy"><div id="knob"></div></div>
+  <div class="tbtn" id="tLob">GLOBO</div>
+  <div class="tbtn" id="tHit">GOLPE</div>
+  <div class="tbtn" id="tCut">CORTE</div>
+  <div class="tbtn" id="tCall">¡TUYA!</div>
+  <div class="tbtn" id="tTac">TÁCTICA</div>
+</div>
+
+<!-- ===== MENÚ PRINCIPAL ===== -->
+<div class="overlay" id="menu">
+  <div class="card main">
+    <div class="logo">PÁDEL <b>ARENA</b></div>
+    <div class="tag">2 VS 2 · CRISTAL Y PAREDES</div>
+    <div class="mm">
+      <button class="mbtn big" data-open="scrExh"><b>EXHIBICIÓN</b><small>Partido rápido · 1 o 2 jugadores</small></button>
+      <button class="mbtn big" data-open="scrTour"><b>TORNEO</b><small>Cuadro de 8 parejas</small></button>
+      <button class="mbtn big" data-act="career"><b>CARRERA</b><small>Creá tu jugador y subí en el ranking</small></button>
+      <button class="mbtn big" data-open="scrTrain"><b>ENTRENAMIENTO</b><small>Máquina lanzapelotas y dianas</small></button>
+      <button class="mbtn big" data-open="scrOnline"><b>ONLINE</b><small>Jugá con un amigo por internet</small></button>
+      <button class="mbtn" data-open="scrCustom"><b>PERSONALIZAR</b></button>
+      <button class="mbtn" data-open="scrSettings"><b>AJUSTES</b></button>
+      <button class="mbtn" data-open="scrHelp"><b>CONTROLES</b></button>
+    </div>
+  </div>
+</div>
+
+<!-- Exhibición -->
+<div class="overlay hidden" id="scrExh">
+  <div class="card">
+    <div class="logo sm">EXHIBICIÓN</div>
+    <div class="grid">
+      <div>
+        <div class="field"><label>JUGADORES</label>
+          <div class="seg" data-key="players"><button data-v="solo">1 JUGADOR</button><button data-v="coop">2 · JUNTOS</button><button data-v="versus">2 · ENFRENTADOS</button></div></div>
+        <div class="field"><label>DIFICULTAD</label>
+          <div class="seg" data-key="diff"><button data-v="facil">FÁCIL</button><button data-v="normal">NORMAL</button><button data-v="dificil">DIFÍCIL</button></div></div>
+        <div class="field"><label>JUEGOS POR SET</label>
+          <div class="seg" data-key="games"><button data-v="2">2</button><button data-v="4">4</button><button data-v="6">6</button></div></div>
+        <div class="field"><label>FORMATO</label>
+          <div class="seg" data-key="bestOf"><button data-v="1">1 SET</button><button data-v="3">MEJOR DE 3</button></div></div>
+        <label class="chk"><input type="checkbox" data-chk="golden"> Punto de oro (sin ventajas)</label>
+      </div>
+      <div>
+        <div class="field"><label>RIVALES</label><div class="rivals" id="rivalList"></div></div>
+      </div>
+    </div>
+    <button class="play" id="bExhPlay">JUGAR</button>
+    <button class="play sec" data-back>VOLVER</button>
+  </div>
+</div>
+
+<!-- Torneo -->
+<div class="overlay hidden" id="scrTour">
+  <div class="card" style="max-width:560px">
+    <div class="logo sm">TORNEO</div>
+    <div class="tag">Ocho parejas, eliminación directa: cuartos, semifinal y final.</div>
+    <div class="field"><label>NIVEL DEL TORNEO</label>
+      <div class="seg" data-key="diff"><button data-v="facil">AMATEUR</button><button data-v="normal">PROFESIONAL</button><button data-v="dificil">ÉLITE</button></div></div>
+    <div class="field"><label>JUEGOS POR PARTIDO</label>
+      <div class="seg" data-key="games"><button data-v="2">2</button><button data-v="4">4</button><button data-v="6">6</button></div></div>
+    <button class="play" id="bTourPlay">EMPEZAR TORNEO</button>
+    <button class="play sec" data-back>VOLVER</button>
+  </div>
+</div>
+<div class="overlay hidden" id="tourOv"><div class="card wide" id="tourBody"></div></div>
+
+<!-- Carrera -->
+<div class="overlay hidden" id="scrCareer"><div class="card wide" id="careerBody"></div></div>
+
+<!-- Entrenamiento -->
+<div class="overlay hidden" id="scrTrain">
+  <div class="card" style="max-width:620px">
+    <div class="logo sm">ENTRENAMIENTO</div>
+    <div class="tag">15 pelotas de la máquina. Dentro = 1 punto · diana naranja = 4 · timing perfecto = +1 · por 3 = +5.</div>
+    <div class="drills" id="drillList"></div>
+    <button class="play sec" data-back>VOLVER</button>
+  </div>
+</div>
+
+<!-- Online -->
+<div class="overlay hidden" id="scrOnline">
+  <div class="card" style="max-width:640px">
+    <div class="logo sm">ONLINE</div>
+    <div class="tag">Conexión directa entre dos navegadores. Uno crea la partida y el otro se une intercambiando dos códigos.</div>
+    <div class="grid">
+      <div>
+        <h3>CREAR PARTIDA</h3>
+        <div class="seg" data-key="onMode" id="onModeSeg"><button data-v="coop" class="on">JUNTOS VS IA</button><button data-v="versus">ENFRENTADOS</button></div>
+        <button class="play small" id="onHost">GENERAR CÓDIGO</button>
+        <textarea id="onOffer" readonly placeholder="Tu código aparecerá acá"></textarea>
+        <button class="ibtn" id="onCopyOffer">COPIAR</button>
+        <textarea id="onAnswerIn" placeholder="Pegá acá el código de respuesta de tu amigo"></textarea>
+        <button class="play small" id="onAccept">CONECTAR</button>
+      </div>
+      <div>
+        <h3>UNIRSE</h3>
+        <textarea id="onOfferIn" placeholder="Pegá acá el código del anfitrión"></textarea>
+        <button class="play small" id="onJoin">GENERAR RESPUESTA</button>
+        <textarea id="onAnswer" readonly placeholder="Tu código de respuesta aparecerá acá"></textarea>
+        <button class="ibtn" id="onCopyAnswer">COPIAR</button>
+      </div>
+    </div>
+    <div id="onStatus" class="notice">Funciona mejor en la misma red o con conexiones domésticas comunes; algunas redes corporativas bloquean la conexión directa.</div>
+    <button class="play sec" data-back>VOLVER</button>
+  </div>
+</div>
+
+<!-- Personalizar -->
+<div class="overlay hidden" id="scrCustom">
+  <div class="card" style="max-width:620px">
+    <div class="logo sm">PERSONALIZAR</div>
+    <div class="field"><label>TU NOMBRE</label><input type="text" id="inName" maxlength="12"></div>
+    <div class="field"><label>CAMISETA</label><div class="sw" id="swShirt"></div></div>
+    <div class="field"><label>PALA</label><div class="sw" id="swPaddle"></div></div>
+    <div class="field"><label>COLOR DE PISTA</label>
+      <div class="seg" data-key="court"><button data-v="azul">AZUL</button><button data-v="verde">VERDE</button><button data-v="terracota">TERRACOTA</button><button data-v="gris">GRIS</button></div></div>
+    <div class="field"><label>ESCENARIO</label>
+      <div class="seg" data-key="venue"><button data-v="noche">ESTADIO DE NOCHE</button><button data-v="dia">AIRE LIBRE DE DÍA</button></div></div>
+    <button class="play small" data-open="scrModels">MODELOS 3D REALES…</button>
+    <button class="play sec" data-back>LISTO</button>
+  </div>
+</div>
+
+<!-- Modelos 3D reales -->
+<div class="overlay hidden" id="scrModels">
+  <div class="card" style="max-width:680px">
+    <div class="logo sm">MODELOS 3D REALES</div>
+    <div class="tag">Usá personajes humanos descargados en lugar de los jugadores dibujados. Se animan solos con los movimientos del juego.</div>
+    <label class="chk"><input type="checkbox" data-chk="realModels"> Usar modelos 3D reales</label>
+    <div class="field"><label>PERSONAJES CARGADOS</label><div id="modelList" class="hist">Ninguno.</div></div>
+    <input type="file" id="modelFile" accept=".glb,.gltf,.fbx" multiple style="display:none">
+    <button class="play small" id="bModelAdd">CARGAR PERSONAJE (.FBX / .GLB)</button>
+    <button class="play small sec" id="bModelSample">PROBAR CON UN MANIQUÍ DE EJEMPLO</button>
+    <div class="field" style="margin-top:14px"><label>ANIMACIONES CAPTURADAS</label><div id="animList" class="hist">Ninguna.</div></div>
+    <input type="file" id="animFile" accept=".fbx" multiple style="display:none">
+    <button class="play small" id="bAnimAdd">CARGAR ANIMACIONES (.FBX)</button>
+    <button class="play small sec" id="bAnimDel">QUITAR ANIMACIONES</button>
+    <div id="modelStatus" class="notice">Cómo conseguir personajes gratis (Mixamo, de Adobe): entrá a mixamo.com con una cuenta de Adobe gratuita → pestaña <b>Characters</b> → elegí un personaje → <b>Download</b> con formato <b>FBX Binary</b> y pose <b>T-pose</b> → cargá ese archivo acá. Podés cargar hasta 4 (uno por jugador). No hacen falta animaciones.</div>
+    <button class="play sec" data-back>VOLVER</button>
+  </div>
+</div>
+
+<!-- Ajustes -->
+<div class="overlay hidden" id="scrSettings">
+  <div class="card" style="max-width:560px">
+    <div class="logo sm">AJUSTES</div>
+    <div class="field"><label>MEDIDOR DE TIMING</label>
+      <div class="seg" data-key="meter"><button data-v="asistido">ASISTIDO</button><button data-v="normal">NORMAL</button><button data-v="pro">PRO</button></div></div>
+    <div class="field"><label>REPETICIONES</label>
+      <div class="seg" data-key="replays"><button data-v="nunca">NUNCA</button><button data-v="destacadas">DESTACADAS</button><button data-v="todas">TODAS</button></div></div>
+    <div class="field"><label>CALIDAD GRÁFICA</label>
+      <div class="seg" data-key="quality"><button data-v="baja">BAJA</button><button data-v="media">MEDIA</button><button data-v="alta">ALTA</button></div>
+      <div class="rules">La cantidad de público cambia al recargar la página.</div></div>
+    <label class="chk"><input type="checkbox" data-chk="voice"> Locutor (voz del navegador)</label>
+    <label class="chk"><input type="checkbox" data-chk="music"> Música en los menús</label>
+    <label class="chk"><input type="checkbox" data-chk="camFx"> Efectos de cámara (sacudida y zoom en remates)</label>
+    <label class="chk"><input type="checkbox" data-chk="assist"> Marcar dónde bota la pelota</label>
+    <label class="chk"><input type="checkbox" data-chk="golden"> Punto de oro por defecto</label>
+    <button class="play sec" data-back>LISTO</button>
+  </div>
+</div>
+
+<!-- Controles -->
+<div class="overlay hidden" id="scrHelp">
+  <div class="card wide">
+    <div class="logo sm">CONTROLES</div>
+    <div class="grid3 controls">
+      <div><h3>JUGADOR 1 (TECLADO)</h3>
+        <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> moverse (también flechas si jugás solo)</div>
+        <div><kbd>ESPACIO</kbd>/<kbd>J</kbd> golpe y saque · <kbd>L</kbd> cortado · <kbd>K</kbd> globo</div>
+        <div>Al golpear: izq./der. dirige · hacia la red = drive liftado · hacia atrás = dejada</div>
+        <div>Pelota alta: golpe = <b>remate</b> · <kbd>L</kbd> = <b>bandeja</b> · <kbd>K</kbd> = <b>víbora</b></div>
+        <div>Hacia la red + remate cerca de la red con buen timing = <b>POR 3</b></div>
+        <div><kbd>Q</kbd> ¡Tuya! · <kbd>E</kbd> ¡Mía! · <kbd>T</kbd> táctica del compañero</div>
+      </div>
+      <div><h3>JUGADOR 2 (TECLADO)</h3>
+        <div>Flechas — moverse</div>
+        <div><kbd>.</kbd> o <kbd>ENTER</kbd> golpe · <kbd>,</kbd> cortado · <kbd>-</kbd> globo</div>
+        <div>(o <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> del teclado numérico)</div>
+        <div><kbd>8</kbd> ¡Tuya! · <kbd>9</kbd> ¡Mía! · <kbd>0</kbd> táctica</div>
+        <h3 style="margin-top:12px">MANDOS</h3>
+        <div>Mando 1 = jugador 1, mando 2 = jugador 2</div>
+        <div>Stick: moverse · <b>A</b> golpe · <b>X</b> cortado · <b>Y</b>/<b>B</b> globo</div>
+        <div><b>LB</b> ¡Tuya! · <b>RB</b> ¡Mía! · <b>SELECT</b> táctica · <b>START</b> pausa</div>
+      </div>
+      <div><h3>CÓMO SE JUEGA</h3>
+        <div class="rules">El medidor aparece cuando la pelota viene hacia vos: golpeá cuando la aguja pase por el verde. La pelota tiene que pasar la red y picar del otro lado antes de tocar el cristal. Después del bote se puede jugar de rebote en las paredes. Si sale de la pista tras botar podés correr afuera a buscarla. Dos botes o pared directa = punto perdido. Si te cansás (barra de energía), corrés más lento y fallás más.</div>
+        <div><kbd>C</kbd> cámara · <kbd>P</kbd> pausa · <kbd>M</kbd> sonido</div>
+      </div>
+    </div>
+    <button class="play sec" data-back>VOLVER</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="pauseOv">
+  <div class="card" style="max-width:420px;text-align:center">
+    <div class="logo sm">PAUSA</div>
+    <button class="play" id="bResume">CONTINUAR</button>
+    <button class="play sec" id="bQuit">SALIR AL MENÚ</button>
+  </div>
+</div>
+
+<div class="overlay hidden" id="overOv">
+  <div class="card" style="max-width:640px;text-align:center">
+    <div id="overTitle"></div>
+    <div id="overSub"></div>
+    <div id="overStats"></div>
+    <div id="overBtns"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- posprocesado (opcional: si no carga, el juego se dibuja igual) -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/LuminosityHighPassShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/BokehShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/BokehPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/AfterimageShader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/AfterimagePass.js"></script>
+<script src="js/util.js?v=50"></script>
+<script src="js/audio.js?v=50"></script>
+<script src="js/models.js?v=50"></script>
+<script src="js/scene.js?v=50"></script>
+<script src="js/physics.js?v=50"></script>
+<script src="js/game.js?v=50"></script>
+<script src="js/animation.js?v=50"></script>
+<script src="js/render.js?v=50"></script>
+<script src="js/hud.js?v=50"></script>
+<script src="js/effects.js?v=50"></script>
+<script src="js/post.js?v=50"></script>
+<script src="js/models3d.js?v=50"></script>
+<script src="js/mocap.js?v=50"></script>
+<script src="js/modes.js?v=50"></script>
+<script src="js/net.js?v=50"></script>
+<script src="js/ui.js?v=50"></script>
+</body>
+</html>
